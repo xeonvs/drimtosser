@@ -1,0 +1,15 @@
+[Paths]
+Inbound=C:\temp
+Msgbase=C:\temp
+PreTossCmd=
+EchoListName=
+
+[Common]
+UseExtendUnPack=0
+ExecPreTossCmd=0
+LogFileName=toss.log
+PointName=Max Irgiznov
+ShowBaloonTips=0
+;тип тоссера:
+;
+TosserType=9

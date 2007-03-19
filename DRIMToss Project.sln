@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DRIMTosser", "DRIMTosser.vbproj", "{AAE4A84B-99EB-44FE-86F1-BF30865E1B09}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2D4EE64D-7968-4363-9209-096CC4BE5075} = {2D4EE64D-7968-4363-9209-096CC4BE5075}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DRIMTCore", "DRIMTCore\DRIMTCore.vbproj", "{2D4EE64D-7968-4363-9209-096CC4BE5075}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{AE5F37FB-1126-443B-BB4D-B6D91372C80C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "fipsBase", "Modules\fipsBase\fipsBase.vbproj", "{7B1B5A8A-B8E5-4DBF-A133-A97C49DEED94}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "jamBase", "Modules\jamBase\jamBase.vbproj", "{EA084053-3CA4-4E9A-A9FB-C642C2FA4B13}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "sqlBase", "Modules\sqlBase\sqlBase.vbproj", "{3854C507-702E-428A-8FF2-607603BEAB2C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AAE4A84B-99EB-44FE-86F1-BF30865E1B09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAE4A84B-99EB-44FE-86F1-BF30865E1B09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAE4A84B-99EB-44FE-86F1-BF30865E1B09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAE4A84B-99EB-44FE-86F1-BF30865E1B09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D4EE64D-7968-4363-9209-096CC4BE5075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D4EE64D-7968-4363-9209-096CC4BE5075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D4EE64D-7968-4363-9209-096CC4BE5075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D4EE64D-7968-4363-9209-096CC4BE5075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B1B5A8A-B8E5-4DBF-A133-A97C49DEED94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B1B5A8A-B8E5-4DBF-A133-A97C49DEED94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B1B5A8A-B8E5-4DBF-A133-A97C49DEED94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1B5A8A-B8E5-4DBF-A133-A97C49DEED94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA084053-3CA4-4E9A-A9FB-C642C2FA4B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA084053-3CA4-4E9A-A9FB-C642C2FA4B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA084053-3CA4-4E9A-A9FB-C642C2FA4B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA084053-3CA4-4E9A-A9FB-C642C2FA4B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3854C507-702E-428A-8FF2-607603BEAB2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3854C507-702E-428A-8FF2-607603BEAB2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3854C507-702E-428A-8FF2-607603BEAB2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3854C507-702E-428A-8FF2-607603BEAB2C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B1B5A8A-B8E5-4DBF-A133-A97C49DEED94} = {AE5F37FB-1126-443B-BB4D-B6D91372C80C}
+		{EA084053-3CA4-4E9A-A9FB-C642C2FA4B13} = {AE5F37FB-1126-443B-BB4D-B6D91372C80C}
+		{3854C507-702E-428A-8FF2-607603BEAB2C} = {AE5F37FB-1126-443B-BB4D-B6D91372C80C}
+	EndGlobalSection
+EndGlobal
