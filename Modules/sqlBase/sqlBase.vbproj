@@ -104,4 +104,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>"$(SolutionDir)SvnRevision\bin\$(ConfigurationName)\SvnRevision.exe" "$(SolutionDir) " "$(ProjectDir)My Project\AssemblyInfo.template.vb" "$(ProjectDir)My Project\AssemblyInfo.vb"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
