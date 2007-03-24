@@ -10,9 +10,9 @@ Public Module Utils
     Public IsUnixRun As Boolean = False 'установлено в True если запуск кода произошел на платформе Unix
 
     Public Sub Initialize()
-        Dim t As Type, p As Integer
+        Dim t As Type, p As Integer, tmpVer As String
 
-        t = Type.GetType("Mono.Runtime")
+        't = Type.GetType("Mono.Runtime")
         If IsNothing(t) Then
             'Console.WriteLine("No mono!")
             IsMonoRun = False
@@ -21,12 +21,15 @@ Public Module Utils
             IsMonoRun = True
         End If
 
+        tmpVer = System.Reflection.Assembly.GetExecutingAssembly().FullName
+        tmpVer = Mid$(tmpVer, InStr(tmpVer, "Version=") + 8, InStr(InStr(tmpVer, "Version="), tmpVer, ",") - (InStr(tmpVer, "Version=") + 8))
+
         p = Environment.OSVersion.Platform
         If (p = 4 Or p = 128) Then
-            sAppInfoString = "DRIMToss for Unix v" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision
+            sAppInfoString = "DRIMTosser for Unix v" & tmpVer 'My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision
             IsUnixRun = True
         Else
-            sAppInfoString = "DRIMToss tosser for windows v" & My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision
+            sAppInfoString = "DRIMTosser for windows v" & tmpVer 'My.Application.Info.Version.Major & "." & My.Application.Info.Version.Minor & "." & My.Application.Info.Version.Revision            
             IsUnixRun = False
         End If
 
