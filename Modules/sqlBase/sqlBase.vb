@@ -366,7 +366,7 @@ Public Class Tosser
 
     Public ReadOnly Property Description() As String Implements IModuleInfo.Description
         Get
-            Return "Generic SQL Toss Module"
+            Return "PostgreSQL Toss Module"
         End Get
     End Property
 
