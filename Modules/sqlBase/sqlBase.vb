@@ -344,7 +344,7 @@ Public Class Tosser
             .Parameters(6).Value = strText
             .Parameters(7).Value = strData
             .Parameters(8).Value = "0"
-            .Parameters(9).Value = Messages(lMessIndex).Pkt.GetToAddr
+            .Parameters(9).Value = Messages(lMessIndex).Pkt.GetFromAddr
             .Parameters(10).Value = strMsgid
 
             Try
