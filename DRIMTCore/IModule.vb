@@ -60,7 +60,7 @@ Public Interface IModule
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ReadOnly Property BaseType() As IDatabasesTypes.enmBaseType
+    ReadOnly Property BaseType() As IModule.enmBaseType
 
 End Interface
 

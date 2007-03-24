@@ -129,6 +129,7 @@ Module modCore
         'запуск тоссинга
         If InStr(1, commands.ToUpper, "-TOSS") <> 0 Then
             'Перед тоссингом выполняется распаковка и запуск внешних комманд.
+            Console.WriteLine(sAppInfoString)
             Call DRIMTCore.Utils.UnPack(sInboundDir, sExtendUnPackCommand, sArcParam)
 
             If bPreTossCmd Then

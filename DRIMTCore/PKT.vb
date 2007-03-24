@@ -14,8 +14,11 @@ Public Module PKT
     Public Structure Addr
         Dim Zone As Short
         Dim Net As Short
-        Dim node As Short
+        Dim Node As Short
         Dim Point As Short
+        Public Overrides Function ToString() As String
+            Return Me.Zone & ":" & Me.Net & "/" & Me.Node & "." & Me.Point
+        End Function
     End Structure
 
     <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi, Pack:=1)> _
@@ -116,6 +119,15 @@ Public Module PKT
             handle.Free()
             Return st
         End Function
+
+        Public Function GetFromAddr() As String
+            Return Me.oZone & ":" & Me.oNet & "/" & Me.oNode & "." & Me.oPoint
+        End Function
+
+        Public Function GetToAddr() As String
+            Return Me.dZone & ":" & Me.dNet & "/" & Me.dNode & "." & Me.dPoint
+        End Function
+
     End Structure
 
     <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi, Pack:=1)> _
@@ -191,6 +203,7 @@ Public Module PKT
     End Structure
 
     Public Structure MessStruct
+        Dim Pkt As PktHeader
         Dim Hdr As MsgInfo
         Dim Msg() As String
     End Structure
@@ -654,6 +667,7 @@ Public Module PKT
         PktMsgList(PktMsgInfo, FileName)
 
         Head = Head.FromBinaryReaderBlock(br)
+        tmpMess.Pkt = Head
 
         'Проверка на тип пакета
         If Head.PacketType <> 2 Or Head.cw1 <> 256 Or Head.CW2 <> 1 Then

@@ -179,7 +179,7 @@ ErrSub:
 
         Dim di As New DirectoryInfo(sInboundDir)
 
-        Console.WriteLine("Unpacking...")
+        Console.WriteLine("Start Unpacking...")
 
         Try
             For Each ext As String In arrArcExt

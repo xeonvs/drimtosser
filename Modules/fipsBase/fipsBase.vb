@@ -300,7 +300,7 @@ Public Class Tosser
         End Function
     End Structure
 
-    Public Enum MessStatus
+    Private Enum MessStatus
         stDB_DELETED = &H1 'Письмо помечено на удаление
         stDB_MARKED_FOR_PURGE = &H2 'Письмо помечено для пурженья
         stDB_AREA_LOCKED = &H4 'Область заблокирована
@@ -317,7 +317,7 @@ Public Class Tosser
         stDB_CONVERTED = &H2000 'Письмо было сконвертировано
     End Enum
 
-    Public Enum MessAttrib
+    Private Enum MessAttrib
         atMSGPRIVATE = &H1 'Частное письмо
         atMSGCRASH = &H2 'Отправить немедленно
         atMSGRECD = &H4 'Письмо получено
@@ -565,7 +565,7 @@ Begin:
 
         If Not BaseArea Then
             strMessText = "Создана новая конференция " & strAreaName & " ..." & vbCr & "_Проверьте настройки конференции._" & vbCr & "Если вы используете пользовательские настройки списка конференций, " & vbCr & "то для её отображения добавьте её в пользовательский список вручную."
-            SaveEventMessage("FBR tosser", "Created new Area...", strMessText, "NETMAIL")
+            SaveEventMessage("DRIM Tosser", "Created new Area...", strMessText, "NETMAIL")
         End If
 
     End Sub
@@ -637,7 +637,7 @@ Begin:
             End If
 
             tmpText = tmpText & tmpString(i) & IIf(i < UBound(tmpString), vbCr, "").ToString
-            '            Debug.Print Asc(Right$(tmpString(i), 1))
+            'Debug.Print Asc(Right$(tmpString(i), 1))
         Next  'i
 
         iMessAttrib = SetMessStatus(iMessAttrib, MessAttrib.atMSGRECD)
@@ -689,7 +689,7 @@ Begin:
         End With
 
         With NewMess 'заолним поля сообщения
-            '        '.MagicID = sMgID 'Это идентификатор начала заголовка нового сообщения
+            'Это идентификатор начала заголовка нового сообщения
             .Initialize()
             .MagicID(0) = 254
             .MagicID(1) = 175
@@ -963,7 +963,7 @@ ErrHandle:
 
     End Sub
 
-    Public Function LoadEchoList(ByVal sFileName As String) As Boolean
+    Private Function LoadEchoList(ByVal sFileName As String) As Boolean
         Dim sLoadLine As String
         Dim splitPos As Short
         Dim sr As StreamReader
@@ -1099,8 +1099,7 @@ ErrHandle:
         For i = 1 To ArrMax
             'System.Windows.Forms.Application.DoEvents()
             If Not ComposeMessage(i) Then
-                OpenNextFile = False
-                Exit Function
+                Return False                
             End If
             'System.Windows.Forms.Application.DoEvents()
         Next i

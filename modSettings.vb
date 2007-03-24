@@ -34,19 +34,6 @@ Public Module modSettings
         End If
         sInboundDir = CutOfNullChar(cIni.Value("Paths", "Inbound"))
 
-        sBasePath = CutOfNullChar(cIni.Value("Paths", "Msgbase"))
-
-        Select Case IsUnixRun
-            Case True
-                If Right(sBasePath, 1) <> "/" Then
-                    sBasePath = sBasePath & "/"
-                End If
-            Case False
-                If Right(sBasePath, 1) <> "\" Then
-                    sBasePath = sBasePath & "\"
-                End If
-        End Select
-
         sPointName = CutOfNullChar(cIni.Value("Common", "PointName"))
         bExtendUnPack = System.Math.Abs(Val(CutOfNullChar(cIni.Value("Common", "UseExtendUnPack"))))
         sExtendUnPackCommand = CutOfNullChar(cIni.Value("Paths", "ExtendUnPack"))
@@ -58,6 +45,21 @@ Public Module modSettings
 
         If CutOfNullChar(cIni.Value("Common", "TosserType")).Length <> 0 Then
             TosserType = CType(CutOfNullChar(cIni.Value("Common", "TosserType")), IDatabasesTypes.enmBaseType)
+        End If
+
+        sBasePath = CutOfNullChar(cIni.Value("Paths", "Msgbase"))
+
+        If TosserType <> IDatabasesTypes.enmBaseType.SQL Then
+            Select Case IsUnixRun
+                Case True
+                    If Right(sBasePath, 1) <> "/" Then
+                        sBasePath = sBasePath & "/"
+                    End If
+                Case False
+                    If Right(sBasePath, 1) <> "\" Then
+                        sBasePath = sBasePath & "\"
+                    End If
+            End Select
         End If
 
         If sExtendUnPackCommand = "0" Then sExtendUnPackCommand = vbNullString
