@@ -303,6 +303,7 @@ Public Class Tosser
             strArea = CutOfNullChar(Replace(tmpBody(0), "AREA:", vbNullString))
         End If
 
+
         For i As Integer = CInt(IIf(strArea = "NETMAIL", 0, 1)) To UBound(tmpBody)
             If Strings.Left(tmpBody(i), 7) = Chr(1) & "MSGID:" Then
                 strFromAdress = Replace(tmpBody(i), Chr(1) & "MSGID:", vbNullString)
@@ -352,6 +353,7 @@ Public Class Tosser
                 Return False
             End Try
 
+            TotalMessCount = TotalMessCount + 1
             Return True
         End With
 
