@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("Visual Studio BBS")> 
 <Assembly: AssemblyProduct("fipsBase")> 
-<Assembly: AssemblyCopyright("Copyright © Visual Studio BBS 2007")> 
+<Assembly: AssemblyCopyright("Copyright © Visual Studio BBS 2006")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: CLSCompliant(True)> 
@@ -33,5 +33,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.*")> 
-<Assembly: AssemblyFileVersion("1.0.0")> 
+<Assembly: AssemblyVersion("1.0.2007.7")> 
+<Assembly: AssemblyFileVersion("1.0.2007.7")> 

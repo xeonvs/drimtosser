@@ -495,10 +495,10 @@ Begin:
 
             With bwA
                 .Write(buff) 'записываем
-                .Flush()
-                .Close()
+                .Flush()                
             End With
             fsA.Close() 'закрываем файл
+            fsA.Dispose()
 
         End If
 
@@ -584,7 +584,7 @@ Begin:
         Dim tmpString() As String
         Dim i As Integer
 
-        Dim fsHdr, fsMes As FileStream, bwHdr, bwMes As BinaryWriter
+        'Dim fsHdr, fsMes As FileStream, bwHdr, bwMes As BinaryWriter
 
 
         ReDim tmpString(0)
@@ -654,14 +654,6 @@ Begin:
         tmpAreaRec = arrAreasToss(lAreaIndex)
         NewIndex = tmpAreaRec.NumberOfMails + 1
 
-        'файл заголовков сообщений
-        fsHdr = New FileStream(sBasePath & CutOfNullChar(tmpAreaRec.FileName) & ".hdr", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite)
-        bwHdr = New BinaryWriter(fsHdr)
-
-        'файл сообщений
-        fsMes = New FileStream(sBasePath & CutOfNullChar(tmpAreaRec.FileName) & ".mes", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite)
-        bwMes = New BinaryWriter(fsMes)
-
         With NewSabj 'заполним поля сообщения
             .Name = strSabj & vbNullChar 'Поле "Тема" заголовка письма
             .DateTime = strData & vbNullChar 'Дата и время создания письма в виде символьной строки в формате, принятом в сети FidoNet
@@ -672,7 +664,7 @@ Begin:
             .Attrib = CShort(iMessAttrib) 'Атрибуты письма
             .MailID = lCurMailID
             .ReciptTime = ParseStdTime(CStr(Now)) '(sReciptTime) '.MailID 'DateDiff("s", CDate(Format("01.01.1970 00:00:00", "dd.mm.yy hh:mm:ss")), DateAdd("h", 0, Now))
-            .offset = CInt(fsMes.Length + 1) 'Смещение в файле сообщений первого символа сообщения
+            .offset = CInt(My.Computer.FileSystem.GetFileInfo(sBasePath & CutOfNullChar(tmpAreaRec.FileName) & ".hdr").Length + 1) 'Смещение в файле сообщений первого символа сообщения
             .TextLen = tmpText.Length  'Длина текста сообщения в файле базы писем (включая все кладжи)
             .index = NewIndex - 1 'Порядковый номер этого сообщения в базе писем (0, 1, 2 и т. д.)
             .OrigZone = GetAdressElement(strFromAdress, AdressElement.iZONE) ' 2 'Номер зоны отправителя (обычно 2)
@@ -722,7 +714,7 @@ Begin:
             .MailID = lCurMailID 'DateDiff("s", CDate(Format("01.01.1970 00:00:00", "dd.mm.yy hh:mm:ss")), Now) 'Идентификатор письма, используемый тосеером
             .ReplyID = lReplyID 'установим идентификатор сообщения на которое отвечаем
             .ReciptTime = ParseStdTime(CStr(Now)) 'ParseStdTime(sReciptTime) '.MailID 'DateDiff("s", CDate(Format("01.01.1970 00:00:00", "dd.mm.yy hh:mm:ss")), DateAdd("h", 0, Now)) '-frmReadAreas.GetTimeShift("2:5015/112.35"), Now))
-            .offset = CInt(fsMes.Length + 1) 'Смещение  первого символа текста сообщения (кладж MagicID) в файле базы писем
+            .offset = CInt(My.Computer.FileSystem.GetFileInfo(sBasePath & CutOfNullChar(tmpAreaRec.FileName) & ".mes").Length + 1) 'Смещение  первого символа текста сообщения (кладж MagicID) в файле базы писем
             .TextLen = tmpText.Length  'Длина текста сообщения в файле базы писем (включая все кладжи)
             .index = NewIndex - 1 'Порядковый номер этого сообщения в базе писем (0, 1, 2 и т. д.)
             '        If UCase$(ConvOemToAnsi(m_Area.Echotag)) <> "NETMAIL" Then
@@ -753,6 +745,7 @@ Begin:
                 .Close()
             End With
             fsA.Close()
+            fsA.Dispose()
 
         End If
 
@@ -869,8 +862,7 @@ ErrHandle:
             buff = NewSabj.ToByteArray
             With bwHdr
                 .Write(buff)
-                .Flush()
-                .Close()
+                .Flush()                
             End With
             fsHdr.Close() 'закрываем файл заголовков
             fsHdr.Dispose()
@@ -881,8 +873,7 @@ ErrHandle:
                 .Write(buff) 'запишем заголовок сообщения        
                 '.Write(OEMText) ' поубивал бы за неестественный интелект, кто вот просит строку писать в юникоде внутрь базы.                
                 .Write(System.Text.Encoding.GetEncoding(866).GetBytes(OEMText)) 'запишем текст сообщения
-                .Flush()
-                .Close()
+                .Flush()                
             End With
             fsMes.Close() 'закроем файл сообщений
             fsMes.Dispose()
@@ -901,12 +892,8 @@ ErrHandle:
         Dim tmpArrayMin, tmpArrayMax As Integer
         Dim blnFirstLine As Boolean
         Dim tmpAreaRec As AreaRecord
-        Dim fsMes As FileStream
 
         tmpAreaRec = arrAreasToss(GetAreaByName("LOCALMAIL"))
-
-        'файл сообщений
-        fsMes = New FileStream(sBasePath & CutOfNullChar(tmpAreaRec.FileName) & ".mes", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite)
 
         blnFirstLine = True
         tmpArray = Split(tmpText, vbCr)
@@ -921,22 +908,22 @@ ErrHandle:
                     strNewText = strNewText & "Копия из области " & UCase(strAreaName) & vbCrLf & tmpArray(i) & vbCr
                     blnFirstLine = False
                 Else
-                    strNewText = strNewText & tmpArray(i) & vbCr
+                    strNewText &= tmpArray(i) & vbCr
                 End If
             Else
-                strNewText = strNewText & tmpArray(i) & vbCr
+                strNewText &= tmpArray(i) & vbCr
             End If
         Next i
 
         With NewSabj
-            .offset = fsMes.Length      'Смещение в файле сообщений первого символа сообщения
+            .offset = CInt(My.Computer.FileSystem.GetFileInfo(sBasePath & CutOfNullChar(tmpAreaRec.FileName) & ".mes").Length)       'Смещение в файле сообщений первого символа сообщения
             .TextLen = strNewText.Length   'Длина текста сообщения в файле базы писем (включая все кладжи)
             .index = tmpAreaRec.NumberOfMails 'Порядковый номер этого сообщения в базе писем (0, 1, 2 и т. д.)
         End With
 
         With NewMess 'заолним поля сообщения
             .Echotag = tmpAreaRec.Echotag & vbNullChar 'Название области
-            .offset = fsMes.Length      'Смещение в файле сообщений первого символа сообщения
+            .offset = NewSabj.offset      'Смещение в файле сообщений первого символа сообщения
             .TextLen = strNewText.Length   'Длина текста сообщения в файле базы писем (включая все кладжи)
             .index = tmpAreaRec.NumberOfMails 'Порядковый номер этого сообщения в базе писем (0, 1, 2 и т. д.)
         End With
@@ -954,6 +941,7 @@ ErrHandle:
                 .Close()
             End With
             fsA.Close() 'закрываем файл
+            fsA.Dispose()
             arrAreasToss(GetAreaByName("LOCALMAIL")) = tmpAreaRec
         End If
 
@@ -1030,12 +1018,10 @@ ErrHandle:
         For i = LBound(arrAreasToss) To UBound(arrAreasToss)
             If UCase(CutOfNullChar(sAreaName)) = UCase(CutOfNullChar(arrAreasToss(i).Echotag)) Then
                 If IsNothing(strUplink) Then
-                    iAreaIndex = i
-                    Exit For
+                    Return i                    
                 Else
                     If InStr(1, arrAreasToss(i).UpLink, Trim(strUplink)) <> 0 Then
-                        iAreaIndex = i
-                        Exit For
+                        Return i                        
                     End If
                 End If
             End If
