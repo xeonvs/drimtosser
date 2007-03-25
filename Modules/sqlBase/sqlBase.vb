@@ -316,7 +316,7 @@ Public Class Tosser
 
         If Strings.Left(tmpBody(0), 5) <> "AREA:" Then
             strArea = "NETMAIL"
-            lngNetMailCount = lngNetMailCount + 1
+            lngNetMailCount += 1
         Else
             strArea = CutOfNullChar(Replace(tmpBody(0), "AREA:", vbNullString))
         End If
@@ -336,7 +336,7 @@ Public Class Tosser
                 strToAdress = Trim(Replace(UCase(strToAdress), "@FIDONET", vbNullString))
             End If
 
-            strText = strText & tmpBody(i) & vbCr
+            strText &= tmpBody(i) & vbCr
         Next
 
         With setMessage
@@ -360,7 +360,7 @@ Public Class Tosser
             End Try
         End With
 
-        TotalMessCount = TotalMessCount + 1
+        TotalMessCount += 1
         Return True
 
     End Function

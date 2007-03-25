@@ -86,56 +86,65 @@ ParseTime_Err:
     End Function
 
     Public Function ParseStdTime(ByVal sTime As String) As Integer
-        Dim tmpDate As Date
-        On Error GoTo errHandler
-        'tmpDate = CDate(Format(sTime, "dd mm yy hh:mm:ss"))
-        tmpDate = CDate(sTime)
-
-        'Return DateDiff(VB.DateInterval.Second, dtUNIX_DATE, tmpDate)
-        Return tmpDate.Subtract(dtUNIX_DATE).TotalSeconds
-
-        Exit Function
-
-errHandler:
-        'Return DateDiff(VB.DateInterval.Second, dtUNIX_DATE, Now)
-        Return Now.Subtract(dtUNIX_DATE).TotalSeconds
+        'tmpDate = CDate(Format(sTime, "dd mm yy hh:mm:ss"))        
+        Try
+            Return CDate(sTime).Subtract(dtUNIX_DATE).TotalSeconds
+        Catch ex As Exception
+            Return Now.Subtract(dtUNIX_DATE).TotalSeconds
+        End Try
     End Function
 
-    Public Function GetAdressElement(ByVal sAdress As String, ByVal Element As AdressElement) As Short
-        'Функция возвращает элемент адреса из строки адреса
+    ''' <summary>
+    ''' Функция возвращает элемент адреса из строки адреса
+    ''' </summary>
+    ''' <param name="sAdress"></param>
+    ''' <param name="Element"></param>
+    ''' <returns></returns>
+    ''' <remarks>требуется доработка</remarks>
+    Public Function GetAdressElement(ByVal sAdress As String, ByVal Element As AdressElement) As Short        
         If sAdress.Length = 0 Then Exit Function 'если строка адреса нулевой длины, тогда на выход
         Dim StartPos, EndPos As Short
 
-        On Error GoTo ErrSub
-        Select Case Element 'узнаем какой элемент нужно получить, если это
+        'узнаем какой элемент нужно получить, если это
+        Select Case Element
             Case AdressElement.iZONE  'Зона, тогда
                 StartPos = CShort(InStr(1, sAdress, ":") - 1)
-                GetAdressElement = CShort(Strings.Left(sAdress, StartPos))
+                If StartPos >= 0 Then
+                    Return CShort(Strings.Left(sAdress, StartPos))
+                End If
 
             Case AdressElement.iNET  'Сеть, тогда
                 StartPos = CShort(InStr(1, sAdress, ":") + 1)
                 EndPos = CShort(InStr(1, sAdress, "/"))
-                GetAdressElement = CShort(Mid(sAdress, StartPos, EndPos - StartPos))
+                If StartPos > 1 Then
+                    Return CShort(Mid(sAdress, StartPos, EndPos - StartPos))
+                End If
 
             Case AdressElement.INode  'Нода, тогда
                 StartPos = CShort(InStr(1, sAdress, "/") + 1)
                 EndPos = CShort(InStr(1, sAdress, "."))
-                If EndPos <= StartPos Then
-                    GetAdressElement = CShort(Mid(sAdress, StartPos))
-                Else
-                    GetAdressElement = CShort(Mid(sAdress, StartPos, EndPos - StartPos))
+                If StartPos > 1 Then
+                    If EndPos <= StartPos Then
+                        Return CShort(Mid(sAdress, StartPos))
+                    Else
+                        Return CShort(Mid(sAdress, StartPos, EndPos - StartPos))
+                    End If
                 End If
 
             Case AdressElement.iPoint  'Поинт, тогда
                 If InStrRev(sAdress, "@", sAdress.Length) <> 0 Then
-                    GetAdressElement = CShort(Strings.Mid(sAdress, InStr(sAdress, ".") + 1, InStrRev(sAdress, "@", sAdress.Length) - InStr(sAdress, ".") - 1))
+                    If IsNumeric(Strings.Mid(sAdress, InStr(sAdress, ".") + 1, InStrRev(sAdress, "@", sAdress.Length) - InStr(sAdress, ".") - 1)) Then
+                        Return CShort(Strings.Mid(sAdress, InStr(sAdress, ".") + 1, InStrRev(sAdress, "@", sAdress.Length) - InStr(sAdress, ".") - 1))
+                    End If
                 Else
-                    GetAdressElement = CShort(Strings.Right(sAdress, sAdress.Length - InStrRev(sAdress, ".", sAdress.Length)))
+                    If IsNumeric(Strings.Right(sAdress, sAdress.Length - InStrRev(sAdress, ".", sAdress.Length))) Then
+                        Return CShort(Strings.Right(sAdress, sAdress.Length - InStrRev(sAdress, ".", sAdress.Length)))
+                    End If
                 End If
 
         End Select
-        Exit Function
-ErrSub:
+
+        Return 0
 
     End Function
 
