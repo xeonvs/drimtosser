@@ -202,6 +202,7 @@ Public Module PKT
         End Function
     End Structure
 
+    <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi, Pack:=1)> _
     Public Structure MessStruct
         Dim Pkt As PktHeader
         Dim Hdr As MsgInfo
@@ -223,7 +224,7 @@ Public Module PKT
         Dim tmp As Short
         Dim Tmp2 As String, Tmp3() As Byte
         Dim MsgHead As New PktMsgHeader
-        Dim m, i As Short
+        Dim m, i As Integer
         Dim Offset1, Offset2, LastSeek As Integer
         Dim TmpFile As String = ""
         Dim fs1, fs2 As FileStream, br As BinaryReader, bw As BinaryWriter
@@ -271,9 +272,9 @@ Public Module PKT
                     'FileGet(fNum, Tmp3)
                     Tmp3 = br.ReadBytes(1024)
                     m = InStr(Encoding.GetEncoding(866).GetString(Tmp3), Chr(0))
-                Loop Until m
+                Loop Until m <> 0
                 'Seek(fNum, LastSeek + m)
-                fs1.Seek(-LastSeek + m, SeekOrigin.Current)
+                fs1.Seek(-1024 + m, SeekOrigin.Current)
             Next
         Next
 
@@ -340,16 +341,16 @@ Public Module PKT
     Public Sub GetAddress(ByRef AdrString As String, ByRef Adres As Addr)
         AdrString = LTrim(RTrim(AdrString))
         If AdrString = "" Then Exit Sub
-        If InStr(AdrString, ":") = 0 Or InStr(AdrString, "/") = 0 Or InStr(AdrString, "/") < InStr(AdrString, ":") Or (InStr(AdrString, ".") < InStr(AdrString, "/") And InStr(AdrString, ".")) Then Exit Sub
+        If InStr(AdrString, ":") = 0 Or InStr(AdrString, "/") = 0 Or InStr(AdrString, "/") < InStr(AdrString, ":") Or ((InStr(AdrString, ".") < InStr(AdrString, "/")) And InStr(AdrString, ".")) Then Exit Sub
 
-        Adres.Zone = Val(Left(AdrString, InStr(AdrString, ":") - 1))
-        Adres.Net = Val(Mid(AdrString, InStr(AdrString, ":") + 1, InStr(AdrString, "/") - InStr(AdrString, ":") - 1))
+        Adres.Zone = CShort(Val(Left(AdrString, InStr(AdrString, ":") - 1)))
+        Adres.Net = CShort(Val(Mid(AdrString, InStr(AdrString, ":") + 1, InStr(AdrString, "/") - InStr(AdrString, ":") - 1)))
 
-        If InStr(AdrString, ".") Then
-            Adres.node = Val(Mid(AdrString, InStr(AdrString, "/") + 1, InStr(AdrString, ".") - InStr(AdrString, "/") - 1))
-            Adres.Point = Val(Right(AdrString, Len(AdrString) - InStr(AdrString, ".")))
+        If InStr(AdrString, ".") <> 0 Then
+            Adres.Node = CShort(Val(Mid(AdrString, InStr(AdrString, "/") + 1, InStr(AdrString, ".") - InStr(AdrString, "/") - 1)))
+            Adres.Point = CShort(Val(Right(AdrString, Len(AdrString) - InStr(AdrString, "."))))
         Else
-            Adres.node = Val(Right(AdrString, Len(AdrString) - InStr(AdrString, "/")))
+            Adres.Node = CShort(Val(Right(AdrString, Len(AdrString) - InStr(AdrString, "/"))))
             Adres.Point = 0
         End If
 
@@ -362,9 +363,9 @@ Public Module PKT
     ''' <param name="FileName"></param>
     ''' <remarks>Поддерживает только пакеты типа 2+</remarks>
     Public Sub PktInfo(ByRef pkt As Packet, ByRef FileName As String)
-        Dim m As String
+        Dim m As Integer
         Dim Head As New PktHeader
-        Dim tmp, i As Short, LastSeek As Integer
+        Dim tmp, i As Short
         Dim Tmp2, Tmp3 As String
         Dim MsgHead As New PktMsgHeader
         Dim fs As New FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
@@ -424,18 +425,17 @@ Public Module PKT
                 Exit Sub
             End If
 
-            pkt.Records = pkt.Records + 1
+            pkt.Records += 1
 
             'Прокручиваем имена, сабж и текст сообщения...
             For i = 1 To 4
                 Tmp3 = Space$(1024)
                 Do
-                    LastSeek = fs.Position
                     'FileGet(ff, Tmp3)
                     Tmp3 = Encoding.GetEncoding(866).GetString(br.ReadBytes(1024))
                     m = InStr(Tmp3, Chr(0))
-                Loop Until m = 0
-                fs.Seek(-LastSeek + m, SeekOrigin.Current)
+                Loop Until m <> 0
+                fs.Seek(-1024 + m, SeekOrigin.Current)
             Next
 
         Loop
@@ -456,7 +456,7 @@ Public Module PKT
         Dim tmp As Short, LastSeek As Integer
         Dim Tmp2 As Char, Tmp3 As String
         Dim MsgHead As New PktMsgHeader
-        Dim Id, m As Short
+        Dim Id, m As Integer
         Dim MsgId As String
         Dim fs As New FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
         Dim br As New BinaryReader(fs)
@@ -497,22 +497,22 @@ Public Module PKT
             Tmp3 = ""
             Do
                 'FileGet(fNum, Tmp2)
-                Tmp2 = br.ReadChar
-                If Tmp2 <> Chr(0) Then Tmp3 = Tmp3 & Tmp2 Else Exit Do
+                Tmp2 = Encoding.GetEncoding(866).GetString(br.ReadBytes(1))
+                If Tmp2 <> Chr(0) Then Tmp3 &= Tmp2 Else Exit Do
             Loop
             a(UBound(a)).ToName = Tmp3
 
             Tmp3 = ""
             Do
-                Tmp2 = br.ReadChar
-                If Tmp2 <> Chr(0) Then Tmp3 = Tmp3 & Tmp2 Else Exit Do
+                Tmp2 = Encoding.GetEncoding(866).GetString(br.ReadBytes(1))
+                If Tmp2 <> Chr(0) Then Tmp3 &= Tmp2 Else Exit Do
             Loop
             a(UBound(a)).FromName = Tmp3
 
             Tmp3 = ""
             Do
-                Tmp2 = br.ReadChar
-                If Tmp2 <> Chr(0) Then Tmp3 = Tmp3 & Tmp2 Else Exit Do
+                Tmp2 = Encoding.GetEncoding(866).GetString(br.ReadBytes(1))
+                If Tmp2 <> Chr(0) Then Tmp3 &= Tmp2 Else Exit Do
             Loop
             a(UBound(a)).Subject = Tmp3
 
@@ -548,10 +548,10 @@ Public Module PKT
                 End If
 
                 m = InStr(Tmp3, Chr(0))
-            Loop Until m = 0
+            Loop Until m <> 0
 
             'Seek(fNum, LastSeek + m)
-            fs.Seek(-LastSeek + m, SeekOrigin.Current)
+            fs.Seek(LastSeek + m, SeekOrigin.Begin)
 
         Loop
 
@@ -571,7 +571,7 @@ Public Module PKT
         Dim Head As New PktHeader
         Dim tmp As Short, Tmp3 As String
         Dim MsgHead As New PktMsgHeader
-        Dim m, i, m1 As Short, LastSeek As Integer
+        Dim m, i, m1 As Integer, LastSeek As Integer
         Dim fs As New FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
         Dim br As New BinaryReader(fs)
 
@@ -604,7 +604,7 @@ Public Module PKT
                 Do
                     Tmp3 = Encoding.GetEncoding(866).GetString(br.ReadBytes(1024))
                     m = InStr(Tmp3, Chr(0))
-                Loop Until m
+                Loop Until m <> 0
 
                 fs.Seek(m, SeekOrigin.Current) 'Seek(fNum, LastSeek + m)
 
@@ -646,7 +646,7 @@ Public Module PKT
     ''' <remarks></remarks>
     Public Sub PktTossPacket(ByRef FileName As String)
         Dim Head As New PktHeader
-        Dim tmp, m, i As Short
+        Dim tmp, m, i As Integer
         Dim Tmp3 As String = "", tmpText As String
         Dim MsgHead As New PktMsgHeader
         Dim LastSeek As Integer
@@ -655,7 +655,7 @@ Public Module PKT
         Dim nPacket As New Packet
         Dim PktMsgInfo() As MsgInfo
 
-        Dim fs As New FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+        Dim fs As New FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read)
         Dim br As New BinaryReader(fs)
 
         'Читает сообщение с номером Wich из pkt'шника
@@ -738,11 +738,11 @@ Public Module PKT
                 m = InStr(1, Tmp3, Chr(0))
                 If m > 0 Then
                     tmpText = tmpText & Left(Tmp3, m - 1)
-                    LastSeek = LastSeek + Left(Tmp3, m - 1).Length
+                    LastSeek += Left(Tmp3, m - 1).Length
                     Exit Do
                 Else
-                    tmpText = tmpText & Tmp3
-                    LastSeek = LastSeek + Tmp3.Length
+                    tmpText &= Tmp3
+                    LastSeek += Tmp3.Length
                 End If
 
             Loop
@@ -758,15 +758,15 @@ Public Module PKT
             m = InStr(1, Tmp3, New String(Chr(0), 2))
 
             If InStr(1, Tmp3, New String(Chr(0), 2)) <> m Then
-                m = m + 1
+                m += 1
             End If
 
             If InStr(1, Tmp3, New String(Chr(0), 4)) = m Then
-                m = m + 1
+                m += 1
             End If
 
             If m > 0 Then
-                LastSeek = LastSeek + m + 3
+                LastSeek += +m + 3
 
                 'Seek(fNum, LastSeek)
                 'FileGet(fNum, Tmp3)
@@ -775,7 +775,7 @@ Public Module PKT
 
                 m = InStr(1, Tmp3, Chr(0))
                 If m > 0 Then
-                    LastSeek = LastSeek + m
+                    LastSeek += m
                 End If
             End If
             'Seek(fNum, LastSeek)

@@ -12,7 +12,7 @@ Public Module Utils
     Public Sub Initialize()
         Dim t As Type, p As Integer, tmpVer As String
 
-        't = Type.GetType("Mono.Runtime")
+        t = Type.GetType("Mono.Runtime")
         If IsNothing(t) Then
             'Console.WriteLine("No mono!")
             IsMonoRun = False
@@ -145,6 +145,7 @@ ErrSub:
             Dim bw As New BinaryWriter(fs)
 
             With bw
+                fs.Seek(0, SeekOrigin.End)
                 .Write(System.Text.Encoding.Default.GetBytes(sMsg & vbCrLf))
                 .Flush()
                 .Close()

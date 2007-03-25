@@ -73,6 +73,25 @@ Public Class Tosser
             Exit Sub
         End Try
 
+        'init setMessage
+        With setMessage
+            .Connection = sqlConn
+            .CommandType = CommandType.StoredProcedure
+            If .Parameters.Count <> 10 Then
+                .Parameters.Add(fromNParam)     '0
+                .Parameters.Add(fromAParam)     '1
+                .Parameters.Add(toNParam)       '2
+                .Parameters.Add(toAParam)       '3
+                .Parameters.Add(echoNameParam)  '4
+                .Parameters.Add(subjParam)      '5
+                .Parameters.Add(msgTextParam)   '6
+                .Parameters.Add(dateParam)      '7
+                .Parameters.Add(attrParam)      '8
+                .Parameters.Add(akaParam)       '9
+                .Parameters.Add(msgidParam)     '10
+            End If
+        End With
+
         If Not Me.LoadAreas() Then
             CreateArea("NETMAIL", "Netmail Area")
         End If
@@ -242,11 +261,10 @@ Public Class Tosser
     End Sub
 
     Private Sub OpenPkt(ByRef sPath As String)
-        Dim fs As New FileStream(sPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+        Dim fs As New FileStream(sPath, FileMode.Open, FileAccess.Read, FileShare.Read)
         Dim br As New BinaryReader(fs)
 
         PKThdr = PKThdr.FromBinaryReaderBlock(br)
-        br.Close()
         fs.Close()
         fs.Dispose()
 
@@ -283,7 +301,7 @@ Public Class Tosser
     End Function
 
     Private Function ComposeMessage(ByVal lMessIndex As Integer) As Boolean
-        Dim strArea, strFromName, strData, strToName, strSabj, strTemp As String
+        Dim strArea, strFromName, strData, strToName, strSabj
         Dim strFromAdress As String = "", strToAdress As String = ""
         Dim tmpBody() As String, strText As String = "", strMsgid As String = ""
 
@@ -322,19 +340,6 @@ Public Class Tosser
         Next
 
         With setMessage
-            .Connection = sqlConn
-            .CommandType = CommandType.StoredProcedure
-            .Parameters.Add(fromNParam)     '0
-            .Parameters.Add(fromAParam)     '1
-            .Parameters.Add(toNParam)       '2
-            .Parameters.Add(toAParam)       '3
-            .Parameters.Add(echoNameParam)  '4
-            .Parameters.Add(subjParam)      '5
-            .Parameters.Add(msgTextParam)   '6
-            .Parameters.Add(dateParam)      '7
-            .Parameters.Add(attrParam)      '8
-            .Parameters.Add(akaParam)       '9
-            .Parameters.Add(msgidParam)     '10
             .Parameters(0).Value = strFromName
             .Parameters(1).Value = strFromAdress
             .Parameters(2).Value = strToName
@@ -350,12 +355,13 @@ Public Class Tosser
             Try
                 .ExecuteNonQuery()
             Catch ex As Exception
+                SaveLog(Now().ToString & "SQL Exception in StoreMessage" & ex.Message)
                 Return False
             End Try
-
-            TotalMessCount = TotalMessCount + 1
-            Return True
         End With
+
+        TotalMessCount = TotalMessCount + 1
+        Return True
 
     End Function
 
