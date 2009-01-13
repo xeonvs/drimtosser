@@ -340,7 +340,7 @@ Public Module PKT
     ''' </summary>
     Public Sub GetAddress(ByRef AdrString As String, ByRef Adres As Addr)
         AdrString = LTrim(RTrim(AdrString))
-        If AdrString = "" Then Exit Sub
+        If AdrString.Length = 0 Then Exit Sub
         If InStr(AdrString, ":") = 0 Or InStr(AdrString, "/") = 0 Or InStr(AdrString, "/") < InStr(AdrString, ":") Or ((InStr(AdrString, ".") < InStr(AdrString, "/")) And InStr(AdrString, ".")) Then Exit Sub
 
         Adres.Zone = CShort(Val(Left(AdrString, InStr(AdrString, ":") - 1)))

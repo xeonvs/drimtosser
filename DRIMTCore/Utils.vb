@@ -169,17 +169,22 @@ ParseTime_Err:
 
     Public Function GetValidPath(ByVal sPath As String) As String
         Dim tmpPath As String = sPath
-        Select Case IsUnixRun
-            Case True
-                If Right(tmpPath, 1) <> "/" Then
-                    tmpPath = tmpPath & "/"
-                End If
-            Case False
-                If Right(tmpPath, 1) <> "\" Then
-                    tmpPath = tmpPath & "\"
-                End If
-        End Select
-        Return tmpPath
+        'Select Case IsUnixRun
+        '    Case True                
+        'If Right(tmpPath, 1) <> "/" Then
+        ' tmpPath = tmpPath & "/"
+        'End If
+        '    Case False
+        'If Right(tmpPath, 1) <> "\" Then
+        ' tmpPath = tmpPath & "\"
+        'End If
+        'End Select
+        If Right(tmpPath, 1) <> "/" Then
+            Return sPath & Path.DirectorySeparatorChar
+        ElseIf Right(tmpPath, 1) <> "\" Then
+            Return sPath & Path.DirectorySeparatorChar
+        End If
+        Return sPath
     End Function
 
     Public Sub UnPack(ByVal sInboundDir As String, ByVal sExtendUnPackCommand As String, ByVal sArcParam As String)
