@@ -1,3 +1,4 @@
+'Based on GFE.NET SQL base class (c) 2005, Max `Xeon` Irgiznov
 Option Explicit On
 
 Imports DRIMTCore.Utils

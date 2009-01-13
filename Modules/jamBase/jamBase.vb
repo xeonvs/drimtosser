@@ -1,3 +1,4 @@
+'Based on GFE jam base class (c) 2003, Max `Xeon` Irgiznov
 Option Explicit On
 Imports DRIMTCore.Utils
 Imports DRIMTCore.PKT
