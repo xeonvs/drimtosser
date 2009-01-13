@@ -1,3 +1,5 @@
+'Copyright Max 'Xeon' Irgiznov 2005-2009
+
 ''' <summary>
 ''' Интерфейс Динамического Модуля
 ''' </summary>

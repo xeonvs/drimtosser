@@ -1,3 +1,6 @@
+'Based on FBRToss code
+'Copyright R. Demidov & M. Irgiznov 2006-2007
+
 Option Strict Off
 Option Explicit On
 

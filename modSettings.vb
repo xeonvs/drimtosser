@@ -1,3 +1,4 @@
+'Copyright Max 'Xeon' Irgiznov 2005-2009
 
 ''' <summary>
 ''' Модуль для доступа к глобальным настройкам

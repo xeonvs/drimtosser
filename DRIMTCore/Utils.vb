@@ -1,3 +1,5 @@
+'Based on FBRToss code
+'Copyright R. Demidov & M. Irgiznov 2006-2007
 Imports System.IO
 
 Public Module Utils
