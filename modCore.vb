@@ -58,8 +58,17 @@ Module modCore
     End Sub
 
     Private Sub PrintUsage()
-        Console.WriteLine("DRIMToss Usage")
+        Console.WriteLine(sAppInfoString)
+        Console.WriteLine(" Usage")
         Console.WriteLine("-------------")
+        Console.WriteLine("DRIMTosser.exe options")
+        Console.WriteLine("options:")
+        Console.WriteLine("-V" & vbTab & "for version")
+        Console.WriteLine("-M" & vbTab & "show loaded modules")
+        Console.WriteLine("-F:" & vbTab & "patch to config file")
+        Console.WriteLine("-TOSS" & vbTab & "start tossing process")
+        Console.WriteLine("-GUI" & vbTab & "gui frontend(not implemented")
+        Console.WriteLine()
     End Sub
 
     Sub Main()
@@ -75,6 +84,12 @@ Module modCore
             Console.WriteLine(sAppInfoString)
             Exit Sub
         End If
+
+        If InStr(1, commands.ToUpper, "-?") <> 0 Then
+            PrintUsage()
+            Exit Sub
+        End If
+
 
         LoadTossersModules()
 
