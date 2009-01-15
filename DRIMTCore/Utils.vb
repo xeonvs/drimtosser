@@ -216,6 +216,14 @@ ParseTime_Err:
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Запуск Shell-команды
+    ''' </summary>
+    ''' <param name="ComLine">Командная строка</param>
+    ''' <param name="DefaultDir">Рабочий каталог</param>
+    ''' <param name="ShowFlag">Флаг видимости дочернего окна</param>
+    ''' <returns>Возвращает True в случае успеха и False в случае неудачи</returns>
+    ''' <remarks>Время ожидания ответа комманды 600000мсек</remarks>
     Public Function CmdShell(ByRef ComLine As String, ByRef DefaultDir As String, ByRef ShowFlag As AppWinStyle) As Boolean
         Dim proc As New Diagnostics.Process
         Try
